@@ -1,3 +1,4 @@
 # Image Processing API
 
-This project aims to give you a real-world scenario in which you would read and write to your disk via a Node.js express server rather than a database.
+### 1. Resize endpoint
+`http://localhost:3091/api/images?filename=<imageFileName>width=<width>&height=<height>`
