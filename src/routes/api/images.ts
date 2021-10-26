@@ -10,11 +10,7 @@ images.get('/', (req, res) => {
     req.query.height as string | number
   )
     .then((image) => {
-      if (image?.path) {
-        res.sendFile(image.path);
-      } else {
-        res.send(image?.error || 'Something went wrong.');
-      }
+      res.sendFile(image.path);
     })
     .catch((error) => {
       res.send(error.message);

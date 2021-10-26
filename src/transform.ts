@@ -1,7 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { Metadata, OutputInfo } from 'sharp';
-const sharp = require('sharp');
+import sharp from 'sharp';
 
 const transform = async (
   filename: string,
@@ -10,19 +9,14 @@ const transform = async (
 ) => {
   const image: {
     path: string;
-    error: Error | undefined;
   } = {
     path: '',
-    error: undefined,
   };
+  let imagePath = '';
 
-  const fullDirName = 'full';
-  const thumbDirName = 'thumb';
-  const thumbDirPath = path.resolve(__dirname, `./images/${thumbDirName}/`);
-  const imageResolver = (dir: string): string =>
-    path.resolve(__dirname, `./images/${dir}/${filename}.jpg`);
-  const fullPath = imageResolver(fullDirName);
-  const thumbPath = imageResolver(thumbDirName);
+  const fullPath = path.resolve(__dirname, `./images/full/${filename}.jpg`);
+  const thumbPath = path.resolve(__dirname, `./images/thumb/${filename}.jpg`);
+  const thumbDir = path.resolve(__dirname, `./images/thumb`);
 
   if (fs.existsSync(thumbPath)) {
     const imageSize = await (async () => {
@@ -30,7 +24,7 @@ const transform = async (
       let height: number | undefined = 0;
       await sharp(thumbPath)
         .metadata()
-        .then((data: Metadata) => {
+        .then((data) => {
           width = data.width;
           height = data.height;
         });
@@ -43,9 +37,9 @@ const transform = async (
     }
   }
 
-  if (!fs.existsSync(thumbDirPath)) {
+  if (!fs.existsSync(thumbDir)) {
     const makeDir = async () => {
-      await fs.promises.mkdir(thumbDirPath);
+      await fs.promises.mkdir(thumbDir);
     };
     await makeDir();
   }
@@ -53,11 +47,8 @@ const transform = async (
   await sharp(fullPath)
     .resize(+width, +height)
     .toFile(thumbPath)
-    .then((info: OutputInfo) => {
+    .then((info) => {
       image.path = thumbPath;
-    })
-    .catch((error: Error) => {
-      image.error = error;
     });
 
   return image;
