@@ -13,7 +13,7 @@ images.get('/', (req, res) => {
       res.sendFile(image.path);
     })
     .catch((error) => {
-      res.send(error.message);
+      res.send(`Error: ${error.message}`);
     });
 });
 

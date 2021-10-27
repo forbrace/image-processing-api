@@ -7,16 +7,14 @@ const transform = async (
   width: string | number = 200,
   height: string | number = 200
 ) => {
-  const image: {
-    path: string;
-  } = {
-    path: '',
-  };
-  let imagePath = '';
-
+  const image: { path: string } = { path: '' };
   const fullPath = path.resolve(__dirname, `./images/full/${filename}.jpg`);
   const thumbPath = path.resolve(__dirname, `./images/thumb/${filename}.jpg`);
-  const thumbDir = path.resolve(__dirname, `./images/thumb`);
+  const thumbDir = path.resolve(__dirname, './images/thumb');
+
+  if (!filename) {
+    throw new Error('File name is missing');
+  }
 
   if (fs.existsSync(thumbPath)) {
     const imageSize = await (async () => {
@@ -27,6 +25,9 @@ const transform = async (
         .then((data) => {
           width = data.width;
           height = data.height;
+        })
+        .catch((error) => {
+          throw error;
         });
       return { width, height };
     })();
@@ -41,14 +42,22 @@ const transform = async (
     const makeDir = async () => {
       await fs.promises.mkdir(thumbDir);
     };
-    await makeDir();
+    try {
+      await makeDir();
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   await sharp(fullPath)
     .resize(+width, +height)
     .toFile(thumbPath)
-    .then((info) => {
+    .then(() => {
       image.path = thumbPath;
+    })
+    .catch((error) => {
+      throw error;
     });
 
   return image;
