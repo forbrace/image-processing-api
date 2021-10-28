@@ -17,12 +17,11 @@ const transform = async (
   const thumbDir = path.resolve(__dirname, './images/thumb');
 
   if (!fs.existsSync(thumbDir)) {
-    const makeDir = async () => {
+    await (async () => {
       await fs.promises.mkdir(thumbDir).catch((error) => {
         throw error;
       });
-    };
-    await makeDir();
+    })();
   }
 
   if (fs.existsSync(thumbDir) && fs.existsSync(thumbPath)) {
