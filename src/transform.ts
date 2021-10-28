@@ -7,46 +7,41 @@ const transform = async (
   width: string | number = 200,
   height: string | number = 200
 ) => {
+  if (!filename) {
+    throw new Error('File name is missing');
+  }
+
   const image: { path: string } = { path: '' };
   const fullPath = path.resolve(__dirname, `./images/full/${filename}.jpg`);
   const thumbPath = path.resolve(__dirname, `./images/thumb/${filename}.jpg`);
   const thumbDir = path.resolve(__dirname, './images/thumb');
 
-  if (!filename) {
-    throw new Error('File name is missing');
+  if (!fs.existsSync(thumbDir)) {
+    const makeDir = async () => {
+      await fs.promises.mkdir(thumbDir).catch((error) => {
+        throw error;
+      });
+    };
+    await makeDir();
   }
 
-  if (fs.existsSync(thumbPath)) {
-    const imageSize = await (async () => {
-      let width: number | undefined = 0;
-      let height: number | undefined = 0;
+  if (fs.existsSync(thumbDir) && fs.existsSync(thumbPath)) {
+    const metadata = await (async () => {
+      let _metadata = <sharp.Metadata>{};
       await sharp(thumbPath)
         .metadata()
         .then((data) => {
-          width = data.width;
-          height = data.height;
+          _metadata = data;
         })
         .catch((error) => {
           throw error;
         });
-      return { width, height };
+      return _metadata;
     })();
 
-    if (imageSize.width === +width && imageSize.height === +height) {
+    if (metadata.width === +width && metadata.height === +height) {
       image.path = thumbPath;
       return image;
-    }
-  }
-
-  if (!fs.existsSync(thumbDir)) {
-    const makeDir = async () => {
-      await fs.promises.mkdir(thumbDir);
-    };
-    try {
-      await makeDir();
-    } catch (error) {
-      console.log(error);
-      throw error;
     }
   }
 
