@@ -26,7 +26,7 @@ const transform = async (
   }
 
   if (fs.existsSync(thumbDir) && fs.existsSync(thumbPath)) {
-    const dimensions = await imageSize(thumbPath);
+    const dimensions = imageSize(thumbPath);
 
     if (dimensions.width === +width && dimensions.height === +height) {
       image.path = thumbPath;
