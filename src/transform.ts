@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import sharp from 'sharp';
+import imageSize from 'image-size';
 
 const transform = async (
   filename: string,
@@ -25,20 +26,9 @@ const transform = async (
   }
 
   if (fs.existsSync(thumbDir) && fs.existsSync(thumbPath)) {
-    const metadata = await (async () => {
-      let _metadata = <sharp.Metadata>{};
-      await sharp(thumbPath)
-        .metadata()
-        .then((data) => {
-          _metadata = data;
-        })
-        .catch((error) => {
-          throw error;
-        });
-      return _metadata;
-    })();
+    const dimensions = await imageSize(thumbPath);
 
-    if (metadata.width === +width && metadata.height === +height) {
+    if (dimensions.width === +width && dimensions.height === +height) {
       image.path = thumbPath;
       return image;
     }
