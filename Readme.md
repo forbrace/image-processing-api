@@ -1,4 +1,39 @@
 # Image Processing API
 
-### 1. Resize endpoint
-`http://localhost:3091/api/images?filename=<imageFileName>width=<width>&height=<height>`
+This application reads and writes resized image to disk via a Node.js express server.
+
+## Provided endpoint
+`/api/image`
+
+### Query string parameters
+
+| Query string param | Type | Description |
+|-------------|---------------|---------------|
+| filename    | `string` | Image from `images/full` folder (required)   |
+| width    | `string` | Image width (optional)          |
+| height | `string` | Image height (optional) 
+
+### Usage example
+`http://localhost:3091/api/images?filename=palmtunnel&width=500&height=500`
+
+## Getting started
+```
+npm install
+npm run start
+```
+
+### Build
+```
+npm run build
+```
+
+### Linter/prettier
+```
+npm run lint
+npm run prettier
+```
+
+### Tests
+```
+npm run test
+```

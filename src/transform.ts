@@ -3,19 +3,19 @@ import fs from 'fs';
 import sharp from 'sharp';
 import imageSize from 'image-size';
 
-const transform = async (
-  filename: string,
-  width: string | number = 200,
-  height: string | number = 200
-) => {
+const transform = async (filename: string, width: string, height: string) => {
   if (!filename) {
-    throw new Error('File name is missing');
+    throw new Error('File name param is missing');
   }
 
   const image: { path: string } = { path: '' };
   const fullPath = path.resolve(__dirname, `./images/full/${filename}.jpg`);
   const thumbPath = path.resolve(__dirname, `./images/thumb/${filename}.jpg`);
   const thumbDir = path.resolve(__dirname, './images/thumb');
+
+  if (!fs.existsSync(fullPath)) {
+    throw new Error(`File located by this path ${fullPath} does not exist`);
+  }
 
   if (!fs.existsSync(thumbDir)) {
     await (async () => {
@@ -25,7 +25,7 @@ const transform = async (
     })();
   }
 
-  if (fs.existsSync(thumbDir) && fs.existsSync(thumbPath)) {
+  if (fs.existsSync(thumbPath)) {
     const dimensions = imageSize(thumbPath);
 
     if (dimensions.width === +width && dimensions.height === +height) {
@@ -35,7 +35,10 @@ const transform = async (
   }
 
   await sharp(fullPath)
-    .resize(+width, +height)
+    .resize(
+      +width || imageSize(fullPath).width,
+      +height || imageSize(fullPath).height
+    )
     .toFile(thumbPath)
     .then(() => {
       image.path = thumbPath;
