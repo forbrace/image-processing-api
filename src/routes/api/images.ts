@@ -1,5 +1,5 @@
 import express from 'express';
-import transform from '../../transform';
+import transform from '../../utilities/transform';
 
 const images = express.Router();
 

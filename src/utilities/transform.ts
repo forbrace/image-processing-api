@@ -1,17 +1,20 @@
-import path from 'path';
 import fs from 'fs';
 import sharp from 'sharp';
 import imageSize from 'image-size';
 
-const transform = async (filename: string, width: string, height: string) => {
+const transform = async (
+  filename: string,
+  width: string,
+  height: string
+): Promise<{ path: string }> => {
   if (!filename) {
     throw new Error('File name param is missing');
   }
 
   const image: { path: string } = { path: '' };
-  const fullPath = path.resolve(__dirname, `./images/full/${filename}.jpg`);
-  const thumbPath = path.resolve(__dirname, `./images/thumb/${filename}.jpg`);
-  const thumbDir = path.resolve(__dirname, './images/thumb');
+  const fullPath = `${process.cwd()}/images/full/${filename}.jpg`;
+  const thumbPath = `${process.cwd()}/images/thumb/${filename}.jpg`;
+  const thumbDir = `${process.cwd()}/images/thumb`;
 
   if (!fs.existsSync(fullPath)) {
     throw new Error(`File located by this path ${fullPath} does not exist`);

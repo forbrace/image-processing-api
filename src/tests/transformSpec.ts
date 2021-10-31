@@ -1,4 +1,4 @@
-import transform from '../transform';
+import transform from '../utilities/transform';
 
 describe('2. Image transform function should resolve or reject.', () => {
   it('Expect transform to not throw error', () => {

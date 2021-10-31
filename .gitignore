@@ -1,6 +1,6 @@
 .DS_Store
 .idea
 dist/
-src/images/thumb
+images/thumb
 node_modules/
 npm-debug.log
