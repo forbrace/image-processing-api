@@ -3,7 +3,7 @@
 This application reads and writes resized image to disk via a Node.js express server.
 
 ## Provided endpoint
-`/api/image`
+`/api/images`
 
 ### Query string parameters
 
