@@ -1,6 +1,7 @@
 import fs from 'fs';
 import sharp from 'sharp';
 import imageSize from 'image-size';
+import { ApiError } from '../services/apiError';
 
 const transform = async (
   filename: string,
@@ -8,7 +9,7 @@ const transform = async (
   height: string
 ): Promise<{ path: string }> => {
   if (!filename) {
-    throw new Error('File name param is missing');
+    throw new ApiError('BAD_REQUEST', 400, 'File name param is missing');
   }
 
   const image: { path: string } = { path: '' };
@@ -17,13 +18,21 @@ const transform = async (
   const thumbDir = `${process.cwd()}/images/thumb`;
 
   if (!fs.existsSync(fullPath)) {
-    throw new Error(`File located by this path ${fullPath} does not exist`);
+    throw new ApiError(
+      'BAD_REQUEST',
+      400,
+      `File located by this path ${fullPath} does not exist`
+    );
   }
 
   if (!fs.existsSync(thumbDir)) {
     await (async () => {
-      await fs.promises.mkdir(thumbDir).catch((error) => {
-        throw error;
+      await fs.promises.mkdir(thumbDir).catch(() => {
+        throw new ApiError(
+          'INTERNAL_SERVER_ERROR',
+          500,
+          'Error creating folder'
+        );
       });
     })();
   }
@@ -46,8 +55,8 @@ const transform = async (
     .then(() => {
       image.path = thumbPath;
     })
-    .catch((error) => {
-      throw error;
+    .catch(() => {
+      throw new ApiError('INTERNAL_SERVER_ERROR', 500, 'Sharp resize error');
     });
 
   return image;

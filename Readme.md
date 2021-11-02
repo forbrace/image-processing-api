@@ -22,9 +22,10 @@ npm install
 npm run start
 ```
 
-### Build
+### Build & Run
 ```
 npm run build
+npm run start-dist
 ```
 
 ### Linter/prettier

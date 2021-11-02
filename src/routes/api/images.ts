@@ -1,14 +1,17 @@
 import express from 'express';
 import transform from '../../utilities/transform';
+import { ApiError } from '../../services/apiError';
 
 const images = express.Router();
 
 images.get('/', (req, res, next) => {
   if (req.baseUrl === req.originalUrl) {
     return res.send(
-      `Usage example: ${req.protocol}://${req.get(
+      `
+      Usage example: ${req.protocol}://${req.get(
         'Host'
-      )}/api/images?filename={encenadaport|fjord|icelandwaterfall|palmtunnel|santamonica}&width=200&height=200`
+      )}/api/images?filename=encenadaport&width=200&height=200
+      `
     );
   }
   transform(
@@ -20,7 +23,11 @@ images.get('/', (req, res, next) => {
       res.sendFile(image.path);
     })
     .catch((error) => {
-      res.send(`Error: ${error.message}`);
+      const body =
+        error instanceof ApiError
+          ? `${error.name}: ${error.message}`
+          : `${error.message}`;
+      res.status(error.statusCode || 500).send(body);
       next(error);
     });
 });
