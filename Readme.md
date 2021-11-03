@@ -10,8 +10,8 @@ This application reads and writes resized image to disk via a Node.js express se
 | Query string param | Type | Description |
 |-------------|---------------|---------------|
 | filename    | `string` | Image from `images/full` folder (required)   |
-| width    | `string` | Image width (optional)          |
-| height | `string` | Image height (optional) 
+| width    | `string` | Image width (required)          |
+| height | `string` | Image height (required) 
 
 ### Usage example
 `http://localhost:3091/api/images?filename=palmtunnel&width=500&height=500`
@@ -31,7 +31,8 @@ npm run start-dist
 ### Linter/prettier
 ```
 npm run lint
-npm run prettier
+npm run prettier-ts
+npm run prettier-js
 ```
 
 ### Tests
