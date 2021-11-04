@@ -1,6 +1,5 @@
 import fs from 'fs';
 import sharp from 'sharp';
-import imageSize from 'image-size';
 import { ApiError } from '../errors/apiError';
 import { numericPositiveIntegerString } from '../utilities/is';
 import { Image } from './types';
@@ -8,11 +7,7 @@ import { Image } from './types';
 async function createDir(dir: string) {
   await (async () => {
     await fs.promises.mkdir(dir).catch(() => {
-      throw new ApiError(
-        'INTERNAL_SERVER_ERROR',
-        500,
-        'Error creating folder'
-      );
+      throw new ApiError('INTERNAL_SERVER_ERROR', 500, 'Error creating folder');
     });
   })();
 }
@@ -49,7 +44,6 @@ function validateParams(image: Image) {
 
 export default class ImageService {
   static async Transform(params: Image) {
-
     validateParams(params);
 
     const image: { path: string } = { path: '' };
@@ -61,19 +55,6 @@ export default class ImageService {
 
     if (!fs.existsSync(thumbDir)) {
       await createDir(thumbDir);
-    }
-
-    // TODO: return cached image
-    if (fs.existsSync(thumbPath)) {
-      const dimensions = imageSize(thumbPath);
-
-      if (
-        dimensions.width === +params.width &&
-        dimensions.height === +params.height
-      ) {
-        image.path = thumbPath;
-        return image;
-      }
     }
 
     await sharp(fullPath)
