@@ -5,7 +5,9 @@ const errorHandler = (
   error: Error,
   req: Request,
   res: Response,
+  /* eslint-disable */
   next: NextFunction
+  /* eslint-enable */
 ) => {
   if (error instanceof ApiError) {
     return res.status(error.statusCode).json({

@@ -13,7 +13,7 @@ export const transform = async (
       height: req.query.height as string,
     });
     res.locals.data = image.path;
-    next(); // => response
+    next(); // => cache.set
   } catch (error) {
     return next(error);
   }

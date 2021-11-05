@@ -11,7 +11,7 @@ const getUrlFromRequest = (req: Request) => {
 const set = (req: Request, res: Response, next: NextFunction) => {
   const url = getUrlFromRequest(req);
   cache.set(url, res.locals.data);
-  return next();
+  return next(); // => response
 };
 
 const get = (req: Request, res: Response, next: NextFunction) => {

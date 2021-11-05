@@ -48,7 +48,9 @@ export default class ImageService {
 
     const image: { path: string } = { path: '' };
     const fullPath = `${process.cwd()}/images/full/${params.filename}.jpg`;
-    const thumbPath = `${process.cwd()}/images/thumb/${params.filename}.jpg`;
+    const thumbPath = `${process.cwd()}/images/thumb/${params.filename}-${
+      params.width
+    }x${params.height}.jpg`;
     const thumbDir = `${process.cwd()}/images/thumb`;
 
     validatePath(fullPath);
