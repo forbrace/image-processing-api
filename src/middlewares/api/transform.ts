@@ -15,6 +15,6 @@ export const transform = async (
     res.locals.data = image.path;
     next(); // => response
   } catch (error) {
-    next(error); // => response
+    return next(error);
   }
 };
